@@ -1,18 +1,17 @@
 
 # TODO LIST API
 
-This repository contains technical information about the todo list api source code and builds, and instructions to run
-locally all services. The demo project can be found in [github.com][github]
-
-## Architecture
-
-* MVC
+This document contains all instructions to run
+locally all api services. The demo project can be found at [github.com][github]
 
 ## External Libraries
 
 * Spring Web
 * JPA
 * H2
+* Lombok
+* JUnit
+* JWT
 
 ## What You Need
 
@@ -82,6 +81,7 @@ curl --header "Content-Type: application/json" \
 --data '{ "userId" : "principal", "taskAbstract" : "Tarefa A do usuário principal", "taskDescription" : "Tarefa pendente", "status" : "PENDING"  }' \
 http://localhost:8080/v1/api-todo/todo/
 ```
+
 Modificar uma tarefa
 ```json
 {
