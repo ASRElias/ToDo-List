@@ -28,7 +28,7 @@ class TaskControllerIntTest {
             MvcResult result = mvc.perform(requestBuilder).andReturn();
             assertEquals(0, result.getResponse().getContentLength());
 
-        } catch (Exception exception) {
+        } catch (Exception ignored) {
 
         }
     }
