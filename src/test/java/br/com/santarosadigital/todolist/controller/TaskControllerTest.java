@@ -11,11 +11,6 @@ class TaskControllerTest {
 
     @Test
     void findAll() {
-        TaskController taskController = new TaskController();
-        List<Task> tasks = taskController.findAll("Xpto");
-        List<Task> expectedResponse = Collections.emptyList();
-        assertNotNull(tasks);
-        assertNotEquals(tasks, expectedResponse, "It should be empty");
     }
 
     @Test
