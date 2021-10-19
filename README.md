@@ -53,16 +53,16 @@ Receber token para operações
 
 Obter lista
 ```shell
-curl --header "x-token: XPTO" http://localhost:8080/v1/api-todo/todo
+curl --header "xToken: XPTO" http://localhost:8080/v1/api-todo/todo
 
-curl --header "x-token: XPTO" http://localhost:8080/v1/api-todo/todo/{id}
+curl --header "xToken: XPTO" http://localhost:8080/v1/api-todo/todo/{id}
 ```
 
 Obter lista por situação
 * COMPLETED
 * PENDING
 ```shell
-curl --header "x-token: XPTO" http://localhost:8080/v1/api-todo/todo/status/{status}
+curl --header "xToken: XPTO" http://localhost:8080/v1/api-todo/todo/status/{status}
 ```
 
 Incluir uma tarefa
@@ -77,6 +77,7 @@ Incluir uma tarefa
 ```
 ```shell
 curl --header "Content-Type: application/json" \
+ --header "xToken: XPTO" \
 --request POST \
 --data '{ "userId" : "principal", "taskAbstract" : "Tarefa A do usuário principal", "taskDescription" : "Tarefa pendente", "status" : "PENDING"  }' \
 http://localhost:8080/v1/api-todo/todo/
@@ -93,6 +94,7 @@ Modificar uma tarefa
 ```
 ```shell
 curl --header "Content-Type: application/json" \
+ --header "xToken: XPTO" \
 --request PUT \
 --data '{  "id" : 1, "taskAbstract" : "Tarefa A do usuário principal", "taskDescription" : "Tarefa realizada", "status" : "COMPLETED"  }' \
 http://localhost:8080/v1/api-todo/todo/
@@ -102,6 +104,7 @@ Apagar uma tarefa
 * ID
 ```shell
 curl --header "Content-Type: application/json" \
+ --header "xToken: XPTO" \
 --request DELETE \
 http://localhost:8080/v1/api-todo/todo/{id}
 ```
