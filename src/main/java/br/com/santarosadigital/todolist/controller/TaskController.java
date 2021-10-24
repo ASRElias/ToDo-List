@@ -1,8 +1,8 @@
 package br.com.santarosadigital.todolist.controller;
 
+import br.com.santarosadigital.todolist.dao.TaskDAO;
 import br.com.santarosadigital.todolist.enumeration.TaskStatusEnum;
 import br.com.santarosadigital.todolist.model.Task;
-import br.com.santarosadigital.todolist.repository.TaskRepository;
 import com.sun.istack.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,17 +11,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
 @RequestMapping("/v1/api-todo")
 public class TaskController extends Diagnostics {
 
-    private static Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @Autowired
-    private TaskRepository taskRepository;
+    private TaskDAO taskDAO;
 
     @GetMapping(path = "/todo", produces = {"application/json"})
     public List<Task> findAll(@RequestHeader(value = "xToken", defaultValue = "") String token) {
@@ -29,33 +28,32 @@ public class TaskController extends Diagnostics {
             logger.info("Token is empty");
             return Collections.emptyList();
         }
-        return taskRepository.findAll(Sort.by(Sort.Direction.ASC,"status"));
+        return taskDAO.findAll(Sort.by(Sort.Direction.ASC,"status"));
     }
 
-    @GetMapping(path = "/todo/{id}", produces = {"application/json"})
-    public Optional<Task> findById(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable("id") Long taskId) {
+    @GetMapping(path = "/todo/{taskId}", produces = {"application/json"})
+    public Optional<Task> findById(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable("taskId") Long taskId) {
         if (token.equals("")) {
             logger.info("Token is empty");
             return Optional.empty();
         }
-        return taskRepository.findById(taskId);
+        return taskDAO.findById(taskId);
     }
 
     @GetMapping(path = "/todo/status/{status}", produces = {"application/json"})
-    public List<Task> findByStatus(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable("status")TaskStatusEnum status) {
+    public List<Task> findAllByStatus(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable("status")TaskStatusEnum status) {
         if (token.equals("")) {
             logger.info("Token is empty");
             return Collections.emptyList();
         }
-        return taskRepository.findAllByStatus(status); }
+        return taskDAO.findAllByStatus(status); }
 
     @PostMapping(path = "/todo")
     public Task save(@RequestHeader(value = "xToken", defaultValue = "") String token, @Validated @NotNull @RequestBody Task task) {
         if (token.equals("")) {
             return null;
         }
-        task.setInsertDate(LocalDateTime.now());
-        return taskRepository.save(task);
+        return taskDAO.save(task);
     }
 
     @PutMapping(path = "/todo")
@@ -64,18 +62,16 @@ public class TaskController extends Diagnostics {
             logger.info("Token is empty");
             return null;
         }
-        Optional<Task> taskToUpdate = taskRepository.findById(task.getId());
-        taskToUpdate.ifPresent(value -> task.setInsertDate(value.getInsertDate()));
-        task.setModifyDate(LocalDateTime.now());
-        return taskRepository.save(task); }
+        return taskDAO.update(task); }
 
-    @DeleteMapping(path = "/todo/{id}")
-    public void delete(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable Long id) {
+    @DeleteMapping(path = "/todo/{taskId}")
+    public void delete(@RequestHeader(value = "xToken", defaultValue = "") String token, @PathVariable("taskId") Long taskId) {
         if (token.equals("")) {
             logger.info("Token is empty");
             return;
         }
-        taskRepository.deleteById(id); }
+        taskDAO.delete(taskId);
+        }
 
     @Override
     @GetMapping(path = "/info", produces = { "application/json" })
